@@ -1,7 +1,7 @@
 
 import { Alert } from "@/types/project";
 import { KanbanCard } from "./KanbanCard";
-import { Message_Square, AlertTriangle, Info, X } from "lucide-react";
+import { MessageSquare, AlertTriangle, Info, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -43,7 +43,7 @@ export const AlertsCard = ({ alerts, onMarkAsRead }: AlertsCardProps) => {
   return (
     <KanbanCard 
       title={`Messages d'Alertes ${unreadAlerts.length > 0 ? `(${unreadAlerts.length})` : ''}`}
-      icon={<Message_Square className="h-5 w-5 text-red-600" />}
+      icon={<MessageSquare className="h-5 w-5 text-red-600" />}
     >
       <div className="space-y-3 max-h-80 overflow-y-auto">
         {alerts.length === 0 ? (

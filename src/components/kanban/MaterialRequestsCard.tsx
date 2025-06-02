@@ -1,7 +1,6 @@
-
 import { MaterialRequest } from "@/types/project";
 import { KanbanCard } from "./KanbanCard";
-import { Hard_Hat, Package, Calendar } from "lucide-react";
+import { HardHat, Package, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface MaterialRequestsCardProps {
@@ -48,7 +47,7 @@ export const MaterialRequestsCard = ({ requests }: MaterialRequestsCardProps) =>
   };
 
   return (
-    <KanbanCard title="Demandes Matériels & Emplois" icon={<Hard_Hat className="h-5 w-5 text-yellow-600" />}>
+    <KanbanCard title="Demandes Matériels & Emplois" icon={<HardHat className="h-5 w-5 text-yellow-600" />}>
       <div className="space-y-3 max-h-80 overflow-y-auto">
         {requests.map((request) => (
           <div key={request.id} className="border rounded-lg p-3 bg-gray-50">
