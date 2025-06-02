@@ -4,6 +4,7 @@ import { KanbanCard } from "./KanbanCard";
 import { Kanban, Clock, User, Calendar } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { TaskDetailsModal } from "./TaskDetailsModal";
 
 interface TasksCardProps {
   tasks: Task[];
@@ -86,6 +87,8 @@ export const TasksCard = ({ tasks }: TasksCardProps) => {
           </div>
         ))}
       </div>
+
+      <TaskDetailsModal tasks={tasks} />
     </KanbanCard>
   );
 };

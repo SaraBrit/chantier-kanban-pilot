@@ -4,6 +4,7 @@ import { KanbanCard } from "./KanbanCard";
 import { MessageSquare, AlertTriangle, Info, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AlertDetailsModal } from "./AlertDetailsModal";
 
 interface AlertsCardProps {
   alerts: Alert[];
@@ -88,6 +89,8 @@ export const AlertsCard = ({ alerts, onMarkAsRead }: AlertsCardProps) => {
           ))
         )}
       </div>
+
+      <AlertDetailsModal alerts={alerts} onMarkAsRead={onMarkAsRead} />
     </KanbanCard>
   );
 };

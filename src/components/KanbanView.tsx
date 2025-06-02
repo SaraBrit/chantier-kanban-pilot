@@ -4,9 +4,12 @@ import { Project, Task, Invoice, MaterialRequest, Alert } from "@/types/project"
 import { ProjectInfoCard } from "./kanban/ProjectInfoCard";
 import { TasksCard } from "./kanban/TasksCard";
 import { InvoicesCard } from "./kanban/InvoicesCard";
-import { MaterialRequestsCard } from "./kanban/MaterialRequestsCard";
+import { MaterialsCard } from "./kanban/MaterialsCard";
+import { EmployeesCard } from "./kanban/EmployeesCard";
 import { AlertsCard } from "./kanban/AlertsCard";
-import { StatsCard } from "./kanban/StatsCard";
+import { MeterReportCard } from "./kanban/MeterReportCard";
+import { ChartsCard } from "./kanban/ChartsCard";
+import { GanttCard } from "./kanban/GanttCard";
 
 interface KanbanViewProps {
   project: Project;
@@ -77,7 +80,8 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
     }
   ]);
 
-  const [materialRequests] = useState<MaterialRequest[]>([
+  // Séparer matériels et emplois
+  const [materials] = useState<MaterialRequest[]>([
     {
       id: "MAT-001",
       projectId: project.id,
@@ -99,6 +103,19 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
       status: "ordered"
     },
     {
+      id: "MAT-003",
+      projectId: project.id,
+      materialName: "Ciment Portland",
+      quantity: 100,
+      unit: "sacs",
+      urgency: "low",
+      requestDate: "2024-06-15",
+      status: "approved"
+    }
+  ]);
+
+  const [employees] = useState<MaterialRequest[]>([
+    {
       id: "EMP-001",
       projectId: project.id,
       materialName: "Grutier qualifié",
@@ -106,6 +123,26 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
       unit: "personne",
       urgency: "high",
       requestDate: "2024-06-25",
+      status: "pending"
+    },
+    {
+      id: "EMP-002",
+      projectId: project.id,
+      materialName: "Maçons",
+      quantity: 3,
+      unit: "personnes",
+      urgency: "medium",
+      requestDate: "2024-06-28",
+      status: "approved"
+    },
+    {
+      id: "EMP-003",
+      projectId: project.id,
+      materialName: "Électricien",
+      quantity: 2,
+      unit: "personnes",
+      urgency: "low",
+      requestDate: "2024-07-05",
       status: "pending"
     }
   ]);
@@ -154,18 +191,21 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
           <div className="space-y-6">
             <ProjectInfoCard project={project} />
             <InvoicesCard invoices={invoices} />
+            <MaterialsCard materials={materials} />
           </div>
 
           {/* Colonne 2 */}
           <div className="space-y-6">
             <TasksCard tasks={tasks} />
-            <MaterialRequestsCard requests={materialRequests} />
+            <EmployeesCard employees={employees} />
+            <MeterReportCard />
           </div>
 
           {/* Colonne 3 */}
           <div className="space-y-6">
             <AlertsCard alerts={alerts} onMarkAsRead={handleMarkAsRead} />
-            <StatsCard project={project} />
+            <ChartsCard project={project} />
+            <GanttCard />
           </div>
         </div>
       </div>

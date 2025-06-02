@@ -3,6 +3,7 @@ import { Invoice } from "@/types/project";
 import { KanbanCard } from "./KanbanCard";
 import { File, Calendar, Euro } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { InvoiceDetailsModal } from "./InvoiceDetailsModal";
 
 interface InvoicesCardProps {
   invoices: Invoice[];
@@ -71,6 +72,8 @@ export const InvoicesCard = ({ invoices }: InvoicesCardProps) => {
             </div>
           ))}
         </div>
+
+        <InvoiceDetailsModal invoices={invoices} />
       </div>
     </KanbanCard>
   );
