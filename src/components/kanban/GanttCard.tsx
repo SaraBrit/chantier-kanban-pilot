@@ -82,7 +82,10 @@ export const GanttCard = ({ tasks = [] }: GanttCardProps) => {
   const projectDuration = 259; // jours total du projet
 
   return (
-    <KanbanCard title="Diagramme de Gantt" icon={<Calendar className="h-5 w-5 text-green-600" />}>
+    <KanbanCard 
+      title="Diagramme de Gantt" 
+      icon={<Calendar className="h-5 w-5 text-green-600" />}
+    >
       <div className="space-y-2">
         {ganttTasks.slice(0, 4).map((task) => {
           const duration = calculateDuration(task.startDate, task.endDate);
@@ -187,7 +190,7 @@ export const GanttCard = ({ tasks = [] }: GanttCardProps) => {
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-yellow-500 rounded mr-1"></div>
-                <span>Démarré (<50%)</span>
+                <span>Démarré (&lt;50%)</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-gray-300 rounded mr-1"></div>
