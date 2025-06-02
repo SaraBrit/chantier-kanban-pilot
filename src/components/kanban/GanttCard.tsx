@@ -1,4 +1,3 @@
-
 import { KanbanCard } from "./KanbanCard";
 import { Calendar, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -186,11 +185,11 @@ export const GanttCard = ({ tasks = [] }: GanttCardProps) => {
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-blue-500 rounded mr-1"></div>
-                <span>En cours (>50%)</span>
+                <span>En cours ({">"} 50%)</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-yellow-500 rounded mr-1"></div>
-                <span>Démarré (&lt;50%)</span>
+                <span>Démarré ({"<"} 50%)</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-gray-300 rounded mr-1"></div>
