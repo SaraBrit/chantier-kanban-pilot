@@ -54,8 +54,8 @@ export const ProjectsList = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map(project => <Card key={project.id} className="cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105 bg-white/95 backdrop-blur-sm" onClick={() => onProjectSelect(project)}>
-                <CardHeader className="pb-3">
+            {projects.map(project => <Card key={project.id} onClick={() => onProjectSelect(project)} className="cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm bg-white">
+                <CardHeader className="pb-3 bg-white">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg font-semibold text-gray-900 truncate">
                       {project.name}
@@ -63,7 +63,7 @@ export const ProjectsList = ({
                     
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 bg-white">
                   <div className="flex items-center text-sm text-gray-600">
                     <Building className="h-4 w-4 mr-2 text-orange-600" />
                     <span className="truncate">{project.client}</span>
