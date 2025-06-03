@@ -60,9 +60,7 @@ export const ProjectsList = ({
                     <CardTitle className="text-lg font-semibold text-gray-900 truncate">
                       {project.name}
                     </CardTitle>
-                    <Badge className={getStatusColor(project.status)}>
-                      {getStatusText(project.status)}
-                    </Badge>
+                    
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -84,10 +82,7 @@ export const ProjectsList = ({
                   
                   
                   
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    <span>{new Date(project.startDate).toLocaleDateString('fr-FR')} - {new Date(project.endDate).toLocaleDateString('fr-FR')}</span>
-                  </div>
+                  
                 </CardContent>
               </Card>)}
           </div>
