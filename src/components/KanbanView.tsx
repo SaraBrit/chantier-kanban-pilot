@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Project, Task, Invoice, MaterialRequest, Alert } from "@/types/project";
+import { Project, Task, Invoice, MaterialRequest, Alert, ContractComplement } from "@/types/project";
 import { ProjectInfoCard } from "./kanban/ProjectInfoCard";
 import { TasksCard } from "./kanban/TasksCard";
 import { InvoicesCard } from "./kanban/InvoicesCard";
@@ -10,6 +9,7 @@ import { AlertsCard } from "./kanban/AlertsCard";
 import { MeterReportCard } from "./kanban/MeterReportCard";
 import { ChartsCard } from "./kanban/ChartsCard";
 import { GanttCard } from "./kanban/GanttCard";
+import { ContractComplementCard } from "./kanban/ContractComplementCard";
 
 interface KanbanViewProps {
   project: Project;
@@ -147,6 +147,49 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
     }
   ]);
 
+  // Add contract complements data
+  const [contractComplements] = useState<ContractComplement[]>([
+    {
+      id: "CC-001",
+      projectId: project.id,
+      contractNumber: "CC-2024-001",
+      description: "Ajout d'un niveau supplémentaire suite à demande client",
+      amount: 120000,
+      status: "approved",
+      signatureDate: "2024-06-10",
+      startDate: "2024-07-01",
+      endDate: "2024-10-15",
+      client: project.client,
+      type: "additional-work"
+    },
+    {
+      id: "CC-002",
+      projectId: project.id,
+      contractNumber: "CC-2024-002",
+      description: "Extension du délai de livraison de 2 mois",
+      amount: 15000,
+      status: "executed",
+      signatureDate: "2024-05-20",
+      startDate: "2024-12-30",
+      endDate: "2025-02-28",
+      client: project.client,
+      type: "extension"
+    },
+    {
+      id: "CC-003",
+      projectId: project.id,
+      contractNumber: "CC-2024-003",
+      description: "Modification des finitions - Matériaux premium",
+      amount: 45000,
+      status: "pending",
+      signatureDate: "2024-06-25",
+      startDate: "2024-09-01",
+      endDate: "2024-11-30",
+      client: project.client,
+      type: "modification"
+    }
+  ]);
+
   const [alerts, setAlerts] = useState<Alert[]>([
     {
       id: "alert-1",
@@ -191,19 +234,20 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
           <div className="space-y-6">
             <ProjectInfoCard project={project} />
             <InvoicesCard invoices={invoices} />
-            <MaterialsCard materials={materials} />
+            <ContractComplementCard contracts={contractComplements} />
           </div>
 
           {/* Colonne 2 */}
           <div className="space-y-6">
             <TasksCard tasks={tasks} />
+            <MaterialsCard materials={materials} />
             <EmployeesCard employees={employees} />
-            <MeterReportCard />
           </div>
 
           {/* Colonne 3 */}
           <div className="space-y-6">
             <AlertsCard alerts={alerts} onMarkAsRead={handleMarkAsRead} />
+            <MeterReportCard />
             <ChartsCard project={project} />
             <GanttCard />
           </div>

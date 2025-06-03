@@ -1,4 +1,3 @@
-
 export interface Project {
   id: string;
   name: string;
@@ -54,4 +53,18 @@ export interface Alert {
   severity: 'info' | 'warning' | 'error';
   date: string;
   isRead: boolean;
+}
+
+export interface ContractComplement {
+  id: string;
+  projectId: string;
+  contractNumber: string;
+  description: string;
+  amount: number;
+  status: 'draft' | 'pending' | 'approved' | 'executed' | 'completed';
+  signatureDate: string;
+  startDate: string;
+  endDate: string;
+  client: string;
+  type: 'modification' | 'extension' | 'additional-work' | 'budget-increase';
 }
