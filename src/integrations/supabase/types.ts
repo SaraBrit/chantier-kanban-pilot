@@ -50,6 +50,39 @@ export type Database = {
           },
         ]
       }
+      documents: {
+        Row: {
+          doc_type: string | null
+          extracted_data: Json | null
+          file_name: string
+          file_type: string
+          id: string
+          storage_path: string
+          uploaded_at: string | null
+          uploader: string | null
+        }
+        Insert: {
+          doc_type?: string | null
+          extracted_data?: Json | null
+          file_name: string
+          file_type: string
+          id?: string
+          storage_path: string
+          uploaded_at?: string | null
+          uploader?: string | null
+        }
+        Update: {
+          doc_type?: string | null
+          extracted_data?: Json | null
+          file_name?: string
+          file_type?: string
+          id?: string
+          storage_path?: string
+          uploaded_at?: string | null
+          uploader?: string | null
+        }
+        Relationships: []
+      }
       Factures: {
         Row: {
           "Date échéance": string | null
