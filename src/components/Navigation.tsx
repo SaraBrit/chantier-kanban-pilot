@@ -1,10 +1,10 @@
 
-import { Building, ArrowLeft, FileText } from "lucide-react";
+import { Building, ArrowLeft, FileText, Archive } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 interface NavigationProps {
-  currentView: 'projects' | 'kanban' | 'documents';
+  currentView: 'projects' | 'kanban' | 'documents' | 'archive';
   projectName?: string;
   onBack?: () => void;
 }
@@ -23,7 +23,8 @@ export const Navigation = ({ currentView, projectName, onBack }: NavigationProps
             <Building className="h-6 w-6 text-orange-600" />
             <span className="text-xl font-bold text-gray-900">
               {currentView === 'projects' ? 'Gestion de Chantiers' : 
-               currentView === 'documents' ? 'Archive Électronique' : projectName}
+               currentView === 'documents' ? 'Archive Électronique' : 
+               currentView === 'archive' ? 'Système d\'Archive' : projectName}
             </span>
           </div>
           
@@ -39,6 +40,12 @@ export const Navigation = ({ currentView, projectName, onBack }: NavigationProps
               <Button variant={currentView === 'documents' ? 'default' : 'ghost'} size="sm">
                 <FileText className="h-4 w-4 mr-2" />
                 Documents
+              </Button>
+            </Link>
+            <Link to="/archive">
+              <Button variant={currentView === 'archive' ? 'default' : 'ghost'} size="sm">
+                <Archive className="h-4 w-4 mr-2" />
+                Archive
               </Button>
             </Link>
           </div>

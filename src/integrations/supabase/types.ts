@@ -83,6 +83,68 @@ export type Database = {
         }
         Relationships: []
       }
+      electronic_archives: {
+        Row: {
+          archived_by: string | null
+          created_at: string
+          document_category: string | null
+          extracted_text: string | null
+          file_name: string
+          file_size: number
+          file_type: string
+          id: string
+          metadata: Json | null
+          original_name: string
+          project_id: number | null
+          status: string | null
+          storage_path: string
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          archived_by?: string | null
+          created_at?: string
+          document_category?: string | null
+          extracted_text?: string | null
+          file_name: string
+          file_size: number
+          file_type: string
+          id?: string
+          metadata?: Json | null
+          original_name: string
+          project_id?: number | null
+          status?: string | null
+          storage_path: string
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          archived_by?: string | null
+          created_at?: string
+          document_category?: string | null
+          extracted_text?: string | null
+          file_name?: string
+          file_size?: number
+          file_type?: string
+          id?: string
+          metadata?: Json | null
+          original_name?: string
+          project_id?: number | null
+          status?: string | null
+          storage_path?: string
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "electronic_archives_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "Projet"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Factures: {
         Row: {
           "Date échéance": string | null
