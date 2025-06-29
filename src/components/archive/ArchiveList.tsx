@@ -26,24 +26,25 @@ const documentCategories = [
 
 export const ArchiveList = ({ onSelectArchive }: ArchiveListProps) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchResults, setSearchResults] = useState<ElectronicArchive[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
   const { archives, loading, deleteArchive, getFileUrl, searchArchives } = useElectronicArchives();
   const { toast } = useToast();
 
-  const displayedArchives = searchResults.length > 0 || searchQuery || selectedCategory ? searchResults : archives;
+  const displayedArchives = searchResults.length > 0 || searchQuery || selectedCategory !== 'all' ? searchResults : archives;
 
   const handleSearch = async () => {
-    if (!searchQuery && !selectedCategory) {
+    if (!searchQuery && selectedCategory === 'all') {
       setSearchResults([]);
       return;
     }
 
     try {
       setIsSearching(true);
-      const results = await searchArchives(searchQuery, selectedCategory);
+      const categoryFilter = selectedCategory === 'all' ? undefined : selectedCategory;
+      const results = await searchArchives(searchQuery, categoryFilter);
       setSearchResults(results);
     } catch (error) {
       toast({
@@ -58,7 +59,7 @@ export const ArchiveList = ({ onSelectArchive }: ArchiveListProps) => {
 
   const handleClearSearch = () => {
     setSearchQuery('');
-    setSelectedCategory('');
+    setSelectedCategory('all');
     setSearchResults([]);
   };
 
@@ -126,7 +127,7 @@ export const ArchiveList = ({ onSelectArchive }: ArchiveListProps) => {
               <SelectValue placeholder="Filtrer par catégorie" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Toutes les catégories</SelectItem>
+              <SelectItem value="all">Toutes les catégories</SelectItem>
               {documentCategories.map(cat => (
                 <SelectItem key={cat} value={cat}>{cat}</SelectItem>
               ))}
@@ -135,7 +136,7 @@ export const ArchiveList = ({ onSelectArchive }: ArchiveListProps) => {
           <Button onClick={handleSearch} disabled={isSearching}>
             <Search className="h-4 w-4" />
           </Button>
-          {(searchQuery || selectedCategory) && (
+          {(searchQuery || selectedCategory !== 'all') && (
             <Button variant="outline" onClick={handleClearSearch}>
               <Filter className="h-4 w-4" />
             </Button>
@@ -146,7 +147,7 @@ export const ArchiveList = ({ onSelectArchive }: ArchiveListProps) => {
       <CardContent>
         {displayedArchives.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            {searchQuery || selectedCategory ? 'Aucun résultat trouvé' : 'Aucun document archivé'}
+            {searchQuery || selectedCategory !== 'all' ? 'Aucun résultat trouvé' : 'Aucun document archivé'}
           </div>
         ) : (
           <div className="space-y-4">
