@@ -42,7 +42,7 @@ export const useElectronicArchives = () => {
       }
       
       console.log('Fetched archives:', data?.length || 0, 'records');
-      console.log('Sample records:', data?.slice(0, 2));
+      console.log('All archive file names:', data?.map(d => d.original_name));
       setArchives(data || []);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur lors du chargement';
