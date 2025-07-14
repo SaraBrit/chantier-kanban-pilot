@@ -28,16 +28,26 @@ export const useElectronicArchives = () => {
   const fetchArchives = async () => {
     try {
       setLoading(true);
+      setError(null);
+      console.log('Fetching archives...');
       const { data, error } = await supabase
         .from('electronic_archives')
         .select('*')
         .eq('status', 'active')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+      
+      console.log('Fetched archives:', data?.length || 0, 'records');
+      console.log('Sample records:', data?.slice(0, 2));
       setArchives(data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
+      const errorMessage = err instanceof Error ? err.message : 'Erreur lors du chargement';
+      console.error('Archive fetch error:', errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
