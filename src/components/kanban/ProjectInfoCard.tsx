@@ -73,9 +73,9 @@ export const ProjectInfoCard = ({
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-600">Montant </span>
+          <span className="text-sm font-medium text-gray-600"><span className="text-sm font-medium text-gray-600">Montant général:</span> </span>
           <span className="text-sm font-semibold text-green-600">
-            {project.monthlyBilling.toLocaleString()} €
+            {project.budget.toLocaleString()} DA
           </span>
         </div>
 
@@ -91,7 +91,7 @@ export const ProjectInfoCard = ({
           <span className="text-sm font-medium text-gray-600">Budget:</span>
           <div className="text-right">
             <div className="text-sm font-semibold text-gray-900">
-              {project.spent.toLocaleString()} / {project.budget.toLocaleString()} €
+              {project.spent.toLocaleString()} / {project.budget.toLocaleString()} DA
             </div>
             <div className="text-xs text-gray-500">
               {(project.spent / project.budget * 100).toFixed(1)}% utilisé
