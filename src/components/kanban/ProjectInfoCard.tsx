@@ -61,9 +61,15 @@ export const ProjectInfoCard = ({
           <span className="text-sm text-gray-900 text-right max-w-40">{project.projectManager}</span>
         </div>
 
-        <div className="flex items-start justify-between">
-          <span className="text-sm font-medium text-gray-600">Contact</span>
-          <span className="text-sm text-gray-900 text-right max-w-40">{project.address}</span>
+        <div className="space-y-2">
+          <div className="flex items-start justify-between">
+            <span className="text-sm font-medium text-gray-600">Téléphone:</span>
+            <span className="text-sm text-gray-900 text-right max-w-40">{project.phone}</span>
+          </div>
+          <div className="flex items-start justify-between">
+            <span className="text-sm font-medium text-gray-600">Email:</span>
+            <span className="text-sm text-gray-900 text-right max-w-40">{project.email}</span>
+          </div>
         </div>
 
         <div className="flex items-center justify-between">

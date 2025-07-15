@@ -5,6 +5,8 @@ export interface Project {
   projectManager: string;
   monthlyBilling: number;
   address: string;
+  phone: string;
+  email: string;
   status: 'planning' | 'in-progress' | 'on-hold' | 'completed';
   startDate: string;
   endDate: string;
