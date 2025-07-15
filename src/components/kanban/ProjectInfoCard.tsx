@@ -1,37 +1,43 @@
-
 import { Project } from "@/types/project";
 import { KanbanCard } from "./KanbanCard";
 import { Building, User, MapPin, Euro, Calendar, TrendingUp } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-
 interface ProjectInfoCardProps {
   project: Project;
 }
-
-export const ProjectInfoCard = ({ project }: ProjectInfoCardProps) => {
+export const ProjectInfoCard = ({
+  project
+}: ProjectInfoCardProps) => {
   const getStatusColor = (status: Project['status']) => {
     switch (status) {
-      case 'planning': return 'bg-blue-100 text-blue-800';
-      case 'in-progress': return 'bg-orange-100 text-orange-800';
-      case 'on-hold': return 'bg-yellow-100 text-yellow-800';
-      case 'completed': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'planning':
+        return 'bg-blue-100 text-blue-800';
+      case 'in-progress':
+        return 'bg-orange-100 text-orange-800';
+      case 'on-hold':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
-
   const getStatusText = (status: Project['status']) => {
     switch (status) {
-      case 'planning': return 'Planification';
-      case 'in-progress': return 'En cours';
-      case 'on-hold': return 'En pause';
-      case 'completed': return 'Terminé';
-      default: return status;
+      case 'planning':
+        return 'Planification';
+      case 'in-progress':
+        return 'En cours';
+      case 'on-hold':
+        return 'En pause';
+      case 'completed':
+        return 'Terminé';
+      default:
+        return status;
     }
   };
-
-  return (
-    <KanbanCard title="Fiche Projet" icon={<Building className="h-5 w-5 text-orange-600" />}>
+  return <KanbanCard title="Fiche Projet" icon={<Building className="h-5 w-5 text-orange-600" />}>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-600">ID:</span>
@@ -56,12 +62,12 @@ export const ProjectInfoCard = ({ project }: ProjectInfoCardProps) => {
         </div>
 
         <div className="flex items-start justify-between">
-          <span className="text-sm font-medium text-gray-600">Adresse:</span>
+          <span className="text-sm font-medium text-gray-600">Contact</span>
           <span className="text-sm text-gray-900 text-right max-w-40">{project.address}</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-600">Fact. mensuelle:</span>
+          <span className="text-sm font-medium text-gray-600">Montant </span>
           <span className="text-sm font-semibold text-green-600">
             {project.monthlyBilling.toLocaleString()} €
           </span>
@@ -82,7 +88,7 @@ export const ProjectInfoCard = ({ project }: ProjectInfoCardProps) => {
               {project.spent.toLocaleString()} / {project.budget.toLocaleString()} €
             </div>
             <div className="text-xs text-gray-500">
-              {((project.spent / project.budget) * 100).toFixed(1)}% utilisé
+              {(project.spent / project.budget * 100).toFixed(1)}% utilisé
             </div>
           </div>
         </div>
@@ -94,6 +100,5 @@ export const ProjectInfoCard = ({ project }: ProjectInfoCardProps) => {
           </div>
         </div>
       </div>
-    </KanbanCard>
-  );
+    </KanbanCard>;
 };
