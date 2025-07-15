@@ -99,7 +99,13 @@ export const ProjectInfoCard = ({
           </div>
         </div>
 
-        <div className="pt-2 border-t">
+        <div className="pt-2 border-t space-y-2">
+          <div className="text-center">
+            <span className="text-xs font-medium text-gray-600">DÉLAI DE RÉALISATION</span>
+            <div className="text-sm font-semibold text-blue-600">
+              {Math.round((new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30.44))} mois
+            </div>
+          </div>
           <div className="flex items-center justify-between text-xs text-gray-500">
             <span>Début: {new Date(project.startDate).toLocaleDateString('fr-FR')}</span>
             <span>Fin: {new Date(project.endDate).toLocaleDateString('fr-FR')}</span>
