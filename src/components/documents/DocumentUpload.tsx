@@ -11,7 +11,11 @@ import { useImportedTasks } from '@/hooks/useImportedTasks';
 import { parseExcelTasks } from '@/lib/excelParser';
 import { toast } from 'sonner';
 
-export const DocumentUpload = () => {
+interface DocumentUploadProps {
+  projectId?: string;
+}
+
+export const DocumentUpload = ({ projectId }: DocumentUploadProps = {}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [docType, setDocType] = useState<string>('');
   const [uploading, setUploading] = useState(false);
@@ -36,8 +40,12 @@ export const DocumentUpload = () => {
       // Handle Excel task import
       if (docType === 'plan_excel' && (selectedFile.name.endsWith('.xlsx') || selectedFile.name.endsWith('.xls'))) {
         const tasks = await parseExcelTasks(selectedFile);
-        addImportedTasks(tasks);
-        toast.success(`${tasks.length} tâches importées depuis le fichier Excel`);
+        if (projectId) {
+          addImportedTasks(projectId, tasks);
+          toast.success(`${tasks.length} tâches importées pour le projet`);
+        } else {
+          toast.success(`${tasks.length} tâches importées`);
+        }
       }
       
       // Always upload the document to storage

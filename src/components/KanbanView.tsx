@@ -17,7 +17,8 @@ interface KanbanViewProps {
 }
 
 export const KanbanView = ({ project }: KanbanViewProps) => {
-  const { importedTasks } = useImportedTasks();
+  const { getTasksForProject } = useImportedTasks();
+  const importedTasksForProject = getTasksForProject(project.id);
   
   // Données mock pour la démonstration
   const [tasks] = useState<Task[]>([
@@ -242,7 +243,7 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
 
           {/* Colonne 2 */}
           <div className="space-y-6">
-            <TasksCard tasks={[...tasks, ...importedTasks]} />
+            <TasksCard tasks={[...tasks, ...importedTasksForProject]} projectId={project.id} projectName={project.name} />
             <MaterialsCard materials={materials} />
             <EmployeesCard employees={employees} />
           </div>

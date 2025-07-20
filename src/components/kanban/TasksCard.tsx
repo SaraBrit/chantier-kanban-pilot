@@ -1,6 +1,7 @@
 
 import { Task } from "@/types/project";
 import { KanbanCard } from "./KanbanCard";
+import { ProjectExcelImport } from "./ProjectExcelImport";
 import { Kanban, Clock, User, Calendar } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -8,9 +9,11 @@ import { TaskDetailsModal } from "./TaskDetailsModal";
 
 interface TasksCardProps {
   tasks: Task[];
+  projectId: string;
+  projectName: string;
 }
 
-export const TasksCard = ({ tasks }: TasksCardProps) => {
+export const TasksCard = ({ tasks, projectId, projectName }: TasksCardProps) => {
   const getStatusColor = (status: Task['status']) => {
     switch (status) {
       case 'todo': return 'bg-gray-100 text-gray-800';
@@ -51,6 +54,10 @@ export const TasksCard = ({ tasks }: TasksCardProps) => {
 
   return (
     <KanbanCard title="Avancement des Tâches" icon={<Kanban className="h-5 w-5 text-blue-600" />}>
+      <div className="flex justify-between items-center mb-4">
+        <span className="text-sm text-gray-600">{tasks.length} tâche(s)</span>
+        <ProjectExcelImport projectId={projectId} projectName={projectName} />
+      </div>
       <div className="space-y-4 max-h-96 overflow-y-auto">
         {tasks.map((task) => (
           <div key={task.id} className="border rounded-lg p-3 bg-gray-50">

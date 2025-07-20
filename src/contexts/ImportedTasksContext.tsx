@@ -1,11 +1,16 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Task } from '@/types/project';
 
+interface ProjectTasks {
+  [projectId: string]: Task[];
+}
+
 interface ImportedTasksContextType {
-  importedTasks: Task[];
-  addImportedTasks: (tasks: Task[]) => void;
-  clearImportedTasks: () => void;
-  removeImportedTask: (taskId: string) => void;
+  importedTasks: ProjectTasks;
+  getTasksForProject: (projectId: string) => Task[];
+  addImportedTasks: (projectId: string, tasks: Task[]) => void;
+  clearImportedTasks: (projectId?: string) => void;
+  removeImportedTask: (projectId: string, taskId: string) => void;
 }
 
 const ImportedTasksContext = createContext<ImportedTasksContextType | undefined>(undefined);
@@ -23,22 +28,41 @@ interface ImportedTasksProviderProps {
 }
 
 export const ImportedTasksProvider: React.FC<ImportedTasksProviderProps> = ({ children }) => {
-  const [importedTasks, setImportedTasks] = useState<Task[]>([]);
+  const [importedTasks, setImportedTasks] = useState<ProjectTasks>({});
 
-  const addImportedTasks = useCallback((tasks: Task[]) => {
-    setImportedTasks(prev => [...prev, ...tasks]);
+  const getTasksForProject = useCallback((projectId: string): Task[] => {
+    return importedTasks[projectId] || [];
+  }, [importedTasks]);
+
+  const addImportedTasks = useCallback((projectId: string, tasks: Task[]) => {
+    setImportedTasks(prev => ({
+      ...prev,
+      [projectId]: [...(prev[projectId] || []), ...tasks]
+    }));
   }, []);
 
-  const clearImportedTasks = useCallback(() => {
-    setImportedTasks([]);
+  const clearImportedTasks = useCallback((projectId?: string) => {
+    if (projectId) {
+      setImportedTasks(prev => {
+        const newTasks = { ...prev };
+        delete newTasks[projectId];
+        return newTasks;
+      });
+    } else {
+      setImportedTasks({});
+    }
   }, []);
 
-  const removeImportedTask = useCallback((taskId: string) => {
-    setImportedTasks(prev => prev.filter(task => task.id !== taskId));
+  const removeImportedTask = useCallback((projectId: string, taskId: string) => {
+    setImportedTasks(prev => ({
+      ...prev,
+      [projectId]: (prev[projectId] || []).filter(task => task.id !== taskId)
+    }));
   }, []);
 
   const value = {
     importedTasks,
+    getTasksForProject,
     addImportedTasks,
     clearImportedTasks,
     removeImportedTask
