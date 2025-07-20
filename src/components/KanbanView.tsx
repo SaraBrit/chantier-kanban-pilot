@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Project, Task, Invoice, MaterialRequest, Alert, ContractComplement } from "@/types/project";
+import { useImportedTasks } from "@/hooks/useImportedTasks";
 import { ProjectInfoCard } from "./kanban/ProjectInfoCard";
 import { TasksCard } from "./kanban/TasksCard";
 import { InvoicesCard } from "./kanban/InvoicesCard";
@@ -16,6 +17,8 @@ interface KanbanViewProps {
 }
 
 export const KanbanView = ({ project }: KanbanViewProps) => {
+  const { importedTasks } = useImportedTasks();
+  
   // Données mock pour la démonstration
   const [tasks] = useState<Task[]>([
     {
@@ -239,7 +242,7 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
 
           {/* Colonne 2 */}
           <div className="space-y-6">
-            <TasksCard tasks={tasks} />
+            <TasksCard tasks={[...tasks, ...importedTasks]} />
             <MaterialsCard materials={materials} />
             <EmployeesCard employees={employees} />
           </div>

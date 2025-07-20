@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Upload, FileText } from 'lucide-react';
 import { useDocuments } from '@/hooks/useDocuments';
+import { useImportedTasks } from '@/hooks/useImportedTasks';
+import { parseExcelTasks } from '@/lib/excelParser';
 import { toast } from 'sonner';
 
 export const DocumentUpload = () => {
@@ -14,6 +16,7 @@ export const DocumentUpload = () => {
   const [docType, setDocType] = useState<string>('');
   const [uploading, setUploading] = useState(false);
   const { uploadDocument } = useDocuments();
+  const { addImportedTasks } = useImportedTasks();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -30,6 +33,14 @@ export const DocumentUpload = () => {
 
     setUploading(true);
     try {
+      // Handle Excel task import
+      if (docType === 'plan_excel' && (selectedFile.name.endsWith('.xlsx') || selectedFile.name.endsWith('.xls'))) {
+        const tasks = await parseExcelTasks(selectedFile);
+        addImportedTasks(tasks);
+        toast.success(`${tasks.length} tâches importées depuis le fichier Excel`);
+      }
+      
+      // Always upload the document to storage
       await uploadDocument(selectedFile, docType || undefined);
       toast.success('Document téléchargé avec succès');
       setSelectedFile(null);
@@ -59,7 +70,7 @@ export const DocumentUpload = () => {
             id="file-input"
             type="file"
             onChange={handleFileChange}
-            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xlsx,.xls"
           />
         </div>
 
@@ -74,6 +85,7 @@ export const DocumentUpload = () => {
               <SelectItem value="contrat">Contrat</SelectItem>
               <SelectItem value="rapport">Rapport</SelectItem>
               <SelectItem value="plan">Plan</SelectItem>
+              <SelectItem value="plan_excel">Plan Excel (Tâches)</SelectItem>
               <SelectItem value="photo">Photo</SelectItem>
               <SelectItem value="autre">Autre</SelectItem>
             </SelectContent>
