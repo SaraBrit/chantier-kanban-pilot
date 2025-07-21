@@ -41,6 +41,7 @@ export const ProjectExcelImport = ({ projectId, projectName }: ProjectExcelImpor
     setUploading(true);
     try {
       const tasks = await parseExcelTasks(selectedFile);
+      console.log('Parsed tasks for project', projectId, ':', tasks);
       addImportedTasks(projectId, tasks);
       toast.success(`${tasks.length} tâches importées pour ${projectName}`);
       

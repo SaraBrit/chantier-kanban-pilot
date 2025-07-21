@@ -35,7 +35,10 @@ export const parseExcelTasks = async (file: File): Promise<Task[]> => {
         // Convert to JSON
         const jsonData = XLSX.utils.sheet_to_json(worksheet) as ExcelTaskRow[];
         
+        console.log('Excel data parsed:', jsonData);
+        
         const tasks: Task[] = jsonData.map((row, index) => {
+          console.log(`Processing row ${index}:`, row);
           // Extract task title (flexible column names)
           const title = row.tache || row.titre || row.nom || `Tâche ${index + 1}`;
           

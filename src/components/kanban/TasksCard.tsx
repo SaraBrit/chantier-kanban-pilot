@@ -14,6 +14,7 @@ interface TasksCardProps {
 }
 
 export const TasksCard = ({ tasks, projectId, projectName }: TasksCardProps) => {
+  console.log('TasksCard received tasks for project', projectId, ':', tasks);
   const getStatusColor = (status: Task['status']) => {
     switch (status) {
       case 'todo': return 'bg-gray-100 text-gray-800';
