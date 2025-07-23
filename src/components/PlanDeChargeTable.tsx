@@ -1,3 +1,4 @@
+import React from "react";
 import { Project } from "@/types/project";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,6 +9,15 @@ interface PlanDeChargeTableProps {
 }
 
 export const PlanDeChargeTable = ({ projects }: PlanDeChargeTableProps) => {
+  // Grouper les projets par catégorie
+  const projectsByCategory = projects.reduce((acc, project) => {
+    if (!acc[project.category]) {
+      acc[project.category] = [];
+    }
+    acc[project.category].push(project);
+    return acc;
+  }, {} as Record<string, Project[]>);
+
   // Calcul des données pour chaque projet
   const calculateProjectData = (project: Project) => {
     const montantGlobal = project.budget;
@@ -29,6 +39,18 @@ export const PlanDeChargeTable = ({ projects }: PlanDeChargeTableProps) => {
       montantResteARealiser,
       montantParTrimestre
     };
+  };
+
+  // Calcul des totaux pour une catégorie
+  const calculateCategoryTotals = (categoryProjects: Project[]) => {
+    return categoryProjects.reduce((totals, project) => {
+      const data = calculateProjectData(project);
+      return {
+        montantGlobal: totals.montantGlobal + data.montantGlobal,
+        montantParTrimestre: totals.montantParTrimestre + data.montantParTrimestre,
+        montantResteARealiser: totals.montantResteARealiser + data.montantResteARealiser
+      };
+    }, { montantGlobal: 0, montantParTrimestre: 0, montantResteARealiser: 0 });
   };
 
   const formatCurrency = (amount: number) => {
@@ -73,30 +95,57 @@ export const PlanDeChargeTable = ({ projects }: PlanDeChargeTableProps) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {projects.map((project) => {
-                const data = calculateProjectData(project);
+              {Object.entries(projectsByCategory).map(([category, categoryProjects]) => {
+                const categoryTotals = calculateCategoryTotals(categoryProjects);
+                
                 return (
-                  <TableRow key={project.id}>
-                    <TableCell className="font-medium">{project.name}</TableCell>
-                    <TableCell>{project.id}</TableCell>
-                    <TableCell>{project.client}</TableCell>
-                    <TableCell>{formatCurrency(data.montantGlobal)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center">
-                        <span className={`mr-2 font-medium ${getTextColor(data.tauxRealisation)}`}>
-                          {data.tauxRealisation}%
-                        </span>
-                        <div className="w-16 h-2 bg-secondary rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full rounded-full transition-all duration-300 ${getProgressColor(data.tauxRealisation)}`}
-                            style={{ width: `${data.tauxRealisation}%` }}
-                          />
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{formatCurrency(data.montantParTrimestre)}</TableCell>
-                    <TableCell>{formatCurrency(data.montantResteARealiser)}</TableCell>
-                  </TableRow>
+                  <React.Fragment key={category}>
+                    {/* En-tête de catégorie */}
+                    <TableRow className="bg-muted/50">
+                      <TableCell className="font-bold text-lg" colSpan={7}>
+                        {category}
+                      </TableCell>
+                    </TableRow>
+                    
+                    {/* Projets de la catégorie */}
+                    {categoryProjects.map((project) => {
+                      const data = calculateProjectData(project);
+                      return (
+                        <TableRow key={project.id}>
+                          <TableCell className="font-medium pl-8">{project.name}</TableCell>
+                          <TableCell>{project.id}</TableCell>
+                          <TableCell>{project.client}</TableCell>
+                          <TableCell>{formatCurrency(data.montantGlobal)}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center">
+                              <span className={`mr-2 font-medium ${getTextColor(data.tauxRealisation)}`}>
+                                {data.tauxRealisation}%
+                              </span>
+                              <div className="w-16 h-2 bg-secondary rounded-full overflow-hidden">
+                                <div 
+                                  className={`h-full rounded-full transition-all duration-300 ${getProgressColor(data.tauxRealisation)}`}
+                                  style={{ width: `${data.tauxRealisation}%` }}
+                                />
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>{formatCurrency(data.montantParTrimestre)}</TableCell>
+                          <TableCell>{formatCurrency(data.montantResteARealiser)}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                    
+                    {/* Ligne de total pour la catégorie */}
+                    <TableRow className="bg-accent/30 border-t-2 font-semibold">
+                      <TableCell className="font-bold pl-8">Total {category}</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell className="font-bold">{formatCurrency(categoryTotals.montantGlobal)}</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell className="font-bold">{formatCurrency(categoryTotals.montantParTrimestre)}</TableCell>
+                      <TableCell className="font-bold">{formatCurrency(categoryTotals.montantResteARealiser)}</TableCell>
+                    </TableRow>
+                  </React.Fragment>
                 );
               })}
             </TableBody>

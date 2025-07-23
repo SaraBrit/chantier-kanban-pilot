@@ -13,6 +13,7 @@ export interface Project {
   budget: number;
   spent: number;
   progress: number;
+  category: 'Equipements' | 'VRD' | 'Bon de commande';
 }
 
 export interface Task {

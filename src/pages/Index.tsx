@@ -26,7 +26,8 @@ const Index = () => {
       endDate: "2024-12-30",
       budget: 850000,
       spent: 320000,
-      progress: 45
+      progress: 45,
+      category: "VRD"
     },
     {
       id: "PRJ-002",
@@ -42,7 +43,8 @@ const Index = () => {
       endDate: "2025-06-15",
       budget: 1200000,
       spent: 480000,
-      progress: 35
+      progress: 35,
+      category: "Equipements"
     },
     {
       id: "PRJ-003",
@@ -58,7 +60,8 @@ const Index = () => {
       endDate: "2025-03-31",
       budget: 950000,
       spent: 0,
-      progress: 0
+      progress: 0,
+      category: "Bon de commande"
     },
     {
       id: "PRJ-004",
@@ -74,7 +77,8 @@ const Index = () => {
       endDate: "2024-05-30",
       budget: 600000,
       spent: 580000,
-      progress: 100
+      progress: 100,
+      category: "VRD"
     },
     {
       id: "PRJ-005",
@@ -90,7 +94,8 @@ const Index = () => {
       endDate: "2025-12-20",
       budget: 2200000,
       spent: 890000,
-      progress: 28
+      progress: 28,
+      category: "Equipements"
     },
     {
       id: "PRJ-006",
@@ -106,7 +111,8 @@ const Index = () => {
       endDate: "2024-11-15",
       budget: 420000,
       spent: 125000,
-      progress: 15
+      progress: 15,
+      category: "Bon de commande"
     }
   ];
 
