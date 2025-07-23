@@ -32,9 +32,9 @@ export const PlanDeChargeTable = ({ projects }: PlanDeChargeTableProps) => {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat('ar-DZ', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'DZD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);
