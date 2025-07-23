@@ -4,6 +4,7 @@ import { Project } from "@/types/project";
 import { Navigation } from "@/components/Navigation";
 import { ProjectsList } from "@/components/ProjectsList";
 import { KanbanView } from "@/components/KanbanView";
+import { PlanDeChargeTable } from "@/components/PlanDeChargeTable";
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'projects' | 'kanban'>('projects');
@@ -128,10 +129,15 @@ const Index = () => {
       />
       
       {currentView === 'projects' ? (
-        <ProjectsList 
-          projects={projects}
-          onProjectSelect={handleProjectSelect}
-        />
+        <div>
+          <ProjectsList 
+            projects={projects}
+            onProjectSelect={handleProjectSelect}
+          />
+          <div className="container mx-auto px-4 pb-8">
+            <PlanDeChargeTable projects={projects} />
+          </div>
+        </div>
       ) : (
         selectedProject && <KanbanView project={selectedProject} />
       )}
