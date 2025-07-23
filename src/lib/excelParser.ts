@@ -76,10 +76,21 @@ export const parseExcelTasks = async (file: File): Promise<Task[]> => {
           
           if (dueDate) {
             try {
-              // Try to parse the date
-              const parsedDate = new Date(dueDate);
-              if (!isNaN(parsedDate.getTime())) {
-                formattedDueDate = parsedDate.toISOString().split('T')[0];
+              // Check if it's an Excel serial date number
+              if (typeof dueDate === 'number' && dueDate > 25567) { // Excel epoch starts at 25567 (1970-01-01)
+                // Convert Excel serial date to JavaScript Date
+                // Excel dates are stored as days since January 1, 1900
+                // But Excel incorrectly treats 1900 as a leap year, so we need to subtract 1 day
+                const excelEpoch = new Date(1900, 0, 1); // January 1, 1900
+                const jsDate = new Date(excelEpoch.getTime() + (dueDate - 2) * 24 * 60 * 60 * 1000);
+                formattedDueDate = jsDate.toISOString().split('T')[0];
+                console.log(`Converted Excel date ${dueDate} to ${formattedDueDate}`);
+              } else {
+                // Try to parse as regular date string
+                const parsedDate = new Date(dueDate);
+                if (!isNaN(parsedDate.getTime())) {
+                  formattedDueDate = parsedDate.toISOString().split('T')[0];
+                }
               }
             } catch (e) {
               console.warn('Could not parse date:', dueDate);
