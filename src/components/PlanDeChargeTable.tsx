@@ -38,6 +38,18 @@ export const PlanDeChargeTable = ({ projects }: PlanDeChargeTableProps) => {
     }).format(amount) + ' DA';
   };
 
+  const getProgressColor = (percentage: number) => {
+    if (percentage < 50) return "bg-red-500";
+    if (percentage > 50) return "bg-green-500";
+    return "bg-yellow-500"; // exactly 50%
+  };
+
+  const getTextColor = (percentage: number) => {
+    if (percentage < 50) return "text-red-600";
+    if (percentage > 50) return "text-green-600";
+    return "text-yellow-600"; // exactly 50%
+  };
+
   return (
     <Card className="mt-8">
       <CardHeader>
@@ -71,10 +83,12 @@ export const PlanDeChargeTable = ({ projects }: PlanDeChargeTableProps) => {
                     <TableCell>{formatCurrency(data.montantGlobal)}</TableCell>
                     <TableCell>
                       <div className="flex items-center">
-                        <span className="mr-2">{data.tauxRealisation}%</span>
+                        <span className={`mr-2 font-medium ${getTextColor(data.tauxRealisation)}`}>
+                          {data.tauxRealisation}%
+                        </span>
                         <div className="w-16 h-2 bg-secondary rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-primary rounded-full transition-all duration-300"
+                            className={`h-full rounded-full transition-all duration-300 ${getProgressColor(data.tauxRealisation)}`}
                             style={{ width: `${data.tauxRealisation}%` }}
                           />
                         </div>
