@@ -7,7 +7,7 @@ import { InvoicesCard } from "./kanban/InvoicesCard";
 import { MaterialsCard } from "./kanban/MaterialsCard";
 import { EmployeesCard } from "./kanban/EmployeesCard";
 import { AlertsCard } from "./kanban/AlertsCard";
-import { MeterReportCard } from "./kanban/MeterReportCard";
+
 import { ChartsCard } from "./kanban/ChartsCard";
 import { GanttCard } from "./kanban/GanttCard";
 import { ContractComplementCard } from "./kanban/ContractComplementCard";
@@ -253,7 +253,7 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
           <div className="space-y-6">
             <AlertsCard alerts={alerts} onMarkAsRead={handleMarkAsRead} />
             <JournalDeChantierCard projectId={project.id} />
-            <MeterReportCard />
+            
             <ChartsCard project={project} />
             <GanttCard />
           </div>
