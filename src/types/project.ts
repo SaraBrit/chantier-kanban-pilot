@@ -81,5 +81,6 @@ export interface JournalDeChantier {
   quantitePlanifiee: number;
   quantiteRealisee: number;
   dateCreation: string;
+  dateRealisation: string;
   responsable: string;
 }

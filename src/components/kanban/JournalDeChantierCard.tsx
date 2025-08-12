@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit } from "lucide-react";
+import { Plus, Edit, Calendar } from "lucide-react";
 import { JournalDeChantier } from "@/types/project";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface JournalDeChantierCardProps {
   projectId: string;
@@ -23,6 +25,7 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       quantitePlanifiee: 100,
       quantiteRealisee: 80,
       dateCreation: "2024-06-01",
+      dateRealisation: "2024-06-15",
       responsable: "Jean Dupont"
     },
     {
@@ -34,6 +37,7 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       quantitePlanifiee: 50,
       quantiteRealisee: 45,
       dateCreation: "2024-06-10",
+      dateRealisation: "2024-06-20",
       responsable: "Marie Martin"
     }
   ]);
@@ -46,6 +50,7 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
     unite: "",
     quantitePlanifiee: "",
     quantiteRealisee: "",
+    dateRealisation: "",
     responsable: ""
   });
 
@@ -61,6 +66,7 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       quantitePlanifiee: parseFloat(formData.quantitePlanifiee),
       quantiteRealisee: parseFloat(formData.quantiteRealisee),
       dateCreation: editingEntry ? editingEntry.dateCreation : new Date().toISOString().split('T')[0],
+      dateRealisation: formData.dateRealisation,
       responsable: formData.responsable
     };
 
@@ -78,6 +84,7 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       unite: "",
       quantitePlanifiee: "",
       quantiteRealisee: "",
+      dateRealisation: "",
       responsable: ""
     });
     setEditingEntry(null);
@@ -92,6 +99,7 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       unite: entry.unite,
       quantitePlanifiee: entry.quantitePlanifiee.toString(),
       quantiteRealisee: entry.quantiteRealisee.toString(),
+      dateRealisation: entry.dateRealisation,
       responsable: entry.responsable
     });
     setIsDialogOpen(true);
@@ -118,6 +126,7 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
                 unite: "",
                 quantitePlanifiee: "",
                 quantiteRealisee: "",
+                dateRealisation: new Date().toISOString().split('T')[0],
                 responsable: ""
               });
             }}>
@@ -182,6 +191,16 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
                 />
               </div>
               <div>
+                <Label htmlFor="dateRealisation">Date de réalisation</Label>
+                <Input
+                  id="dateRealisation"
+                  type="date"
+                  value={formData.dateRealisation}
+                  onChange={(e) => setFormData(prev => ({ ...prev, dateRealisation: e.target.value }))}
+                  required
+                />
+              </div>
+              <div>
                 <Label htmlFor="responsable">Responsable</Label>
                 <Input
                   id="responsable"
@@ -208,6 +227,7 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
                 <TableHead>Qté Planifiée</TableHead>
                 <TableHead>Qté Réalisée</TableHead>
                 <TableHead>%</TableHead>
+                <TableHead>Date</TableHead>
                 <TableHead>Responsable</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -224,6 +244,12 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
                     <TableCell>{entry.quantiteRealisee}</TableCell>
                     <TableCell className={getProgressColor(entry.quantitePlanifiee, entry.quantiteRealisee)}>
                       {percentage}%
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3 text-muted-foreground" />
+                        {format(new Date(entry.dateRealisation), 'dd/MM/yyyy', { locale: fr })}
+                      </div>
                     </TableCell>
                     <TableCell>{entry.responsable}</TableCell>
                     <TableCell>
