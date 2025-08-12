@@ -71,3 +71,15 @@ export interface ContractComplement {
   client: string;
   type: 'modification' | 'extension' | 'additional-work' | 'budget-increase';
 }
+
+export interface JournalDeChantier {
+  id: string;
+  projectId: string;
+  designation: string;
+  numeroArticle: string;
+  unite: string;
+  quantitePlanifiee: number;
+  quantiteRealisee: number;
+  dateCreation: string;
+  responsable: string;
+}
