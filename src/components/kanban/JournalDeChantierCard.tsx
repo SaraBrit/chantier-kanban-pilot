@@ -238,73 +238,81 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="designation">Désignation</Label>
-                  <Input
-                    id="designation"
-                    value={formData.designation}
-                    onChange={(e) => setFormData(prev => ({ ...prev, designation: e.target.value }))}
-                    required
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="designation">Désignation</Label>
+                    <Input
+                      id="designation"
+                      value={formData.designation}
+                      onChange={(e) => setFormData(prev => ({ ...prev, designation: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="numeroArticle">Numéro d'article</Label>
+                    <Input
+                      id="numeroArticle"
+                      value={formData.numeroArticle}
+                      onChange={(e) => setFormData(prev => ({ ...prev, numeroArticle: e.target.value }))}
+                      required
+                    />
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="numeroArticle">Numéro d'article</Label>
-                  <Input
-                    id="numeroArticle"
-                    value={formData.numeroArticle}
-                    onChange={(e) => setFormData(prev => ({ ...prev, numeroArticle: e.target.value }))}
-                    required
-                  />
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="unite">Unité</Label>
+                    <Input
+                      id="unite"
+                      value={formData.unite}
+                      onChange={(e) => setFormData(prev => ({ ...prev, unite: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="quantitePlanifiee">Quantité planifiée</Label>
+                    <Input
+                      id="quantitePlanifiee"
+                      type="number"
+                      step="0.01"
+                      value={formData.quantitePlanifiee}
+                      onChange={(e) => setFormData(prev => ({ ...prev, quantitePlanifiee: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="quantiteRealisee">Quantité réalisée</Label>
+                    <Input
+                      id="quantiteRealisee"
+                      type="number"
+                      step="0.01"
+                      value={formData.quantiteRealisee}
+                      onChange={(e) => setFormData(prev => ({ ...prev, quantiteRealisee: e.target.value }))}
+                      required
+                    />
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="unite">Unité</Label>
-                  <Input
-                    id="unite"
-                    value={formData.unite}
-                    onChange={(e) => setFormData(prev => ({ ...prev, unite: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="quantitePlanifiee">Quantité planifiée</Label>
-                  <Input
-                    id="quantitePlanifiee"
-                    type="number"
-                    step="0.01"
-                    value={formData.quantitePlanifiee}
-                    onChange={(e) => setFormData(prev => ({ ...prev, quantitePlanifiee: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="quantiteRealisee">Quantité réalisée</Label>
-                  <Input
-                    id="quantiteRealisee"
-                    type="number"
-                    step="0.01"
-                    value={formData.quantiteRealisee}
-                    onChange={(e) => setFormData(prev => ({ ...prev, quantiteRealisee: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="dateRealisation">Date de réalisation</Label>
-                  <Input
-                    id="dateRealisation"
-                    type="date"
-                    value={formData.dateRealisation}
-                    onChange={(e) => setFormData(prev => ({ ...prev, dateRealisation: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="responsable">Responsable</Label>
-                  <Input
-                    id="responsable"
-                    value={formData.responsable}
-                    onChange={(e) => setFormData(prev => ({ ...prev, responsable: e.target.value }))}
-                    required
-                  />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="dateRealisation">Date de réalisation</Label>
+                    <Input
+                      id="dateRealisation"
+                      type="date"
+                      value={formData.dateRealisation}
+                      onChange={(e) => setFormData(prev => ({ ...prev, dateRealisation: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="responsable">Responsable</Label>
+                    <Input
+                      id="responsable"
+                      value={formData.responsable}
+                      onChange={(e) => setFormData(prev => ({ ...prev, responsable: e.target.value }))}
+                      required
+                    />
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
