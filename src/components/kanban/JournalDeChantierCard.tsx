@@ -84,8 +84,8 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
       dateCreation: editingEntry ? editingEntry.dateCreation : new Date().toISOString().split('T')[0],
       dateRealisation: formData.dateRealisation,
       responsable: formData.responsable,
-      taskId: formData.taskId || undefined,
-      invoiceId: formData.invoiceId || undefined,
+      taskId: formData.taskId && formData.taskId !== "none" ? formData.taskId : undefined,
+      invoiceId: formData.invoiceId && formData.invoiceId !== "none" ? formData.invoiceId : undefined,
       facturable: formData.facturable,
       montantFacture: formData.montantFacture ? parseFloat(formData.montantFacture) : undefined
     };
@@ -125,8 +125,8 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
       quantiteRealisee: entry.quantiteRealisee.toString(),
       dateRealisation: entry.dateRealisation,
       responsable: entry.responsable,
-      taskId: entry.taskId || "",
-      invoiceId: entry.invoiceId || "",
+      taskId: entry.taskId || "none",
+      invoiceId: entry.invoiceId || "none",
       facturable: entry.facturable,
       montantFacture: entry.montantFacture?.toString() || ""
     });
@@ -310,12 +310,12 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="taskId">Tâche liée</Label>
-                    <Select value={formData.taskId} onValueChange={(value) => setFormData(prev => ({ ...prev, taskId: value }))}>
+                    <Select value={formData.taskId} onValueChange={(value) => setFormData(prev => ({ ...prev, taskId: value === "none" ? "" : value }))}>
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner une tâche" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Aucune tâche</SelectItem>
+                        <SelectItem value="none">Aucune tâche</SelectItem>
                         {tasks.map((task) => (
                           <SelectItem key={task.id} value={task.id}>
                             {task.title}
@@ -327,12 +327,12 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
                   
                   <div>
                     <Label htmlFor="invoiceId">Facture liée</Label>
-                    <Select value={formData.invoiceId} onValueChange={(value) => setFormData(prev => ({ ...prev, invoiceId: value }))}>
+                    <Select value={formData.invoiceId} onValueChange={(value) => setFormData(prev => ({ ...prev, invoiceId: value === "none" ? "" : value }))}>
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner une facture" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Aucune facture</SelectItem>
+                        <SelectItem value="none">Aucune facture</SelectItem>
                         {invoices.map((invoice) => (
                           <SelectItem key={invoice.id} value={invoice.id}>
                             #{invoice.id} - {invoice.description}
