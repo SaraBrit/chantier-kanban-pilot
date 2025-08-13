@@ -231,7 +231,7 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
             Ajouter
           </Button>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent className="max-w-lg">
+            <DialogContent className="max-w-4xl">
               <DialogHeader>
                 <DialogTitle>
                   {editingEntry ? "Modifier l'entrée" : "Nouvelle entrée"}
