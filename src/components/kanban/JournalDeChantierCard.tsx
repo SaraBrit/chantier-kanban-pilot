@@ -5,17 +5,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Calendar, Printer } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Plus, Edit, Calendar, Printer, Link } from "lucide-react";
 import * as XLSX from 'xlsx';
-import { JournalDeChantier } from "@/types/project";
+import { JournalDeChantier, Task, Invoice } from "@/types/project";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
 interface JournalDeChantierCardProps {
   projectId: string;
+  tasks: Task[];
+  invoices: Invoice[];
 }
 
-export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps) => {
+export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeChantierCardProps) => {
   const [journalEntries, setJournalEntries] = useState<JournalDeChantier[]>([
     {
       id: "JDC-001",
@@ -27,7 +31,10 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       quantiteRealisee: 80,
       dateCreation: "2024-06-01",
       dateRealisation: "2024-06-15",
-      responsable: "Jean Dupont"
+      responsable: "Jean Dupont",
+      taskId: tasks[0]?.id,
+      facturable: true,
+      montantFacture: 8000
     },
     {
       id: "JDC-002",
@@ -39,7 +46,11 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       quantiteRealisee: 45,
       dateCreation: "2024-06-10",
       dateRealisation: "2024-06-20",
-      responsable: "Marie Martin"
+      responsable: "Marie Martin",
+      taskId: tasks[1]?.id,
+      invoiceId: invoices[0]?.id,
+      facturable: true,
+      montantFacture: 4500
     }
   ]);
 
@@ -52,7 +63,11 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
     quantitePlanifiee: "",
     quantiteRealisee: "",
     dateRealisation: "",
-    responsable: ""
+    responsable: "",
+    taskId: "",
+    invoiceId: "",
+    facturable: false,
+    montantFacture: ""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -68,7 +83,11 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       quantiteRealisee: parseFloat(formData.quantiteRealisee),
       dateCreation: editingEntry ? editingEntry.dateCreation : new Date().toISOString().split('T')[0],
       dateRealisation: formData.dateRealisation,
-      responsable: formData.responsable
+      responsable: formData.responsable,
+      taskId: formData.taskId || undefined,
+      invoiceId: formData.invoiceId || undefined,
+      facturable: formData.facturable,
+      montantFacture: formData.montantFacture ? parseFloat(formData.montantFacture) : undefined
     };
 
     if (editingEntry) {
@@ -86,7 +105,11 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       quantitePlanifiee: "",
       quantiteRealisee: "",
       dateRealisation: "",
-      responsable: ""
+      responsable: "",
+      taskId: "",
+      invoiceId: "",
+      facturable: false,
+      montantFacture: ""
     });
     setEditingEntry(null);
     setIsDialogOpen(false);
@@ -101,7 +124,11 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       quantitePlanifiee: entry.quantitePlanifiee.toString(),
       quantiteRealisee: entry.quantiteRealisee.toString(),
       dateRealisation: entry.dateRealisation,
-      responsable: entry.responsable
+      responsable: entry.responsable,
+      taskId: entry.taskId || "",
+      invoiceId: entry.invoiceId || "",
+      facturable: entry.facturable,
+      montantFacture: entry.montantFacture?.toString() || ""
     });
     setIsDialogOpen(true);
   };
@@ -115,16 +142,25 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
 
   const handleExportToExcel = () => {
     // Prepare data for Excel export
-    const excelData = journalEntries.map(entry => ({
-      'Désignation': entry.designation,
-      'N° Article': entry.numeroArticle,
-      'Unité': entry.unite,
-      'Qté Planifiée': entry.quantitePlanifiee,
-      'Qté Réalisée': entry.quantiteRealisee,
-      'Pourcentage (%)': ((entry.quantiteRealisee / entry.quantitePlanifiee) * 100).toFixed(1) + '%',
-      'Date de Réalisation': format(new Date(entry.dateRealisation), 'dd/MM/yyyy', { locale: fr }),
-      'Responsable': entry.responsable
-    }));
+    const excelData = journalEntries.map(entry => {
+      const relatedTask = tasks.find(t => t.id === entry.taskId);
+      const relatedInvoice = invoices.find(i => i.id === entry.invoiceId);
+      
+      return {
+        'Désignation': entry.designation,
+        'N° Article': entry.numeroArticle,
+        'Unité': entry.unite,
+        'Qté Planifiée': entry.quantitePlanifiee,
+        'Qté Réalisée': entry.quantiteRealisee,
+        'Pourcentage (%)': ((entry.quantiteRealisee / entry.quantitePlanifiee) * 100).toFixed(1) + '%',
+        'Date de Réalisation': format(new Date(entry.dateRealisation), 'dd/MM/yyyy', { locale: fr }),
+        'Responsable': entry.responsable,
+        'Tâche Liée': relatedTask?.title || 'Aucune',
+        'Facturable': entry.facturable ? 'Oui' : 'Non',
+        'Montant Facturé': entry.montantFacture ? `${entry.montantFacture}€` : 'N/A',
+        'Facture Liée': relatedInvoice?.id || 'Aucune'
+      };
+    });
 
     // Create workbook and worksheet
     const workbook = XLSX.utils.book_new();
@@ -139,7 +175,11 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
       { wch: 15 }, // Qté Réalisée
       { wch: 15 }, // Pourcentage
       { wch: 18 }, // Date
-      { wch: 15 }  // Responsable
+      { wch: 15 }, // Responsable
+      { wch: 20 }, // Tâche Liée
+      { wch: 12 }, // Facturable
+      { wch: 15 }, // Montant Facturé
+      { wch: 15 }  // Facture Liée
     ];
     worksheet['!cols'] = columnWidths;
 
@@ -178,14 +218,18 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
                   quantitePlanifiee: "",
                   quantiteRealisee: "",
                   dateRealisation: new Date().toISOString().split('T')[0],
-                  responsable: ""
+                  responsable: "",
+                  taskId: "",
+                  invoiceId: "",
+                  facturable: false,
+                  montantFacture: ""
                 });
               }}>
                 <Plus className="h-4 w-4 mr-1" />
                 Ajouter
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-lg">
               <DialogHeader>
                 <DialogTitle>
                   {editingEntry ? "Modifier l'entrée" : "Nouvelle entrée"}
@@ -260,6 +304,65 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
                     required
                   />
                 </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="taskId">Tâche liée</Label>
+                    <Select value={formData.taskId} onValueChange={(value) => setFormData(prev => ({ ...prev, taskId: value }))}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner une tâche" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Aucune tâche</SelectItem>
+                        {tasks.map((task) => (
+                          <SelectItem key={task.id} value={task.id}>
+                            {task.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="invoiceId">Facture liée</Label>
+                    <Select value={formData.invoiceId} onValueChange={(value) => setFormData(prev => ({ ...prev, invoiceId: value }))}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner une facture" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Aucune facture</SelectItem>
+                        {invoices.map((invoice) => (
+                          <SelectItem key={invoice.id} value={invoice.id}>
+                            #{invoice.id} - {invoice.description}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="facturable" 
+                    checked={formData.facturable}
+                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, facturable: !!checked }))}
+                  />
+                  <Label htmlFor="facturable">Travail facturable</Label>
+                </div>
+                
+                {formData.facturable && (
+                  <div>
+                    <Label htmlFor="montantFacture">Montant à facturer (€)</Label>
+                    <Input
+                      id="montantFacture"
+                      type="number"
+                      step="0.01"
+                      value={formData.montantFacture}
+                      onChange={(e) => setFormData(prev => ({ ...prev, montantFacture: e.target.value }))}
+                    />
+                  </div>
+                )}
+                
                 <Button type="submit" className="w-full">
                   {editingEntry ? "Modifier" : "Ajouter"}
                 </Button>
@@ -281,12 +384,17 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
                 <TableHead>%</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Responsable</TableHead>
+                <TableHead>Liens</TableHead>
+                <TableHead>Facturation</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {journalEntries.map((entry) => {
                 const percentage = ((entry.quantiteRealisee / entry.quantitePlanifiee) * 100).toFixed(1);
+                const relatedTask = tasks.find(t => t.id === entry.taskId);
+                const relatedInvoice = invoices.find(i => i.id === entry.invoiceId);
+                
                 return (
                   <TableRow key={entry.id}>
                     <TableCell className="font-medium">{entry.designation}</TableCell>
@@ -304,6 +412,34 @@ export const JournalDeChantierCard = ({ projectId }: JournalDeChantierCardProps)
                       </div>
                     </TableCell>
                     <TableCell>{entry.responsable}</TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        {relatedTask && (
+                          <div className="flex items-center gap-1 text-xs text-blue-600">
+                            <Link className="h-3 w-3" />
+                            {relatedTask.title}
+                          </div>
+                        )}
+                        {relatedInvoice && (
+                          <div className="flex items-center gap-1 text-xs text-green-600">
+                            <Link className="h-3 w-3" />
+                            #{relatedInvoice.id}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className={`text-xs ${entry.facturable ? 'text-green-600' : 'text-gray-500'}`}>
+                          {entry.facturable ? 'Facturable' : 'Non facturable'}
+                        </div>
+                        {entry.montantFacture && (
+                          <div className="text-xs font-medium">
+                            {entry.montantFacture}€
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <Button
                         variant="ghost"

@@ -252,7 +252,7 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
           {/* Colonne 3 */}
           <div className="space-y-6">
             <AlertsCard alerts={alerts} onMarkAsRead={handleMarkAsRead} />
-            <JournalDeChantierCard projectId={project.id} />
+            <JournalDeChantierCard projectId={project.id} tasks={tasks} invoices={invoices} />
             
             <ChartsCard project={project} />
             <GanttCard />

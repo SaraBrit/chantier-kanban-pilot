@@ -83,4 +83,8 @@ export interface JournalDeChantier {
   dateCreation: string;
   dateRealisation: string;
   responsable: string;
+  taskId?: string; // Link to related task
+  invoiceId?: string; // Link to related invoice
+  facturable: boolean; // Whether this work is billable
+  montantFacture?: number; // Amount to invoice for this work
 }
