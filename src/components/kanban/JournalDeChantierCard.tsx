@@ -207,28 +207,30 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
             <Printer className="h-4 w-4" />
             Exporter Excel
           </Button>
+          <Button 
+            size="sm" 
+            onClick={() => {
+              setEditingEntry(null);
+              setFormData({
+                designation: "",
+                numeroArticle: "",
+                unite: "",
+                quantitePlanifiee: "",
+                quantiteRealisee: "",
+                dateRealisation: new Date().toISOString().split('T')[0],
+                responsable: "",
+                taskId: "",
+                invoiceId: "",
+                facturable: false,
+                montantFacture: ""
+              });
+              setIsDialogOpen(true);
+            }}
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Ajouter
+          </Button>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" onClick={() => {
-                setEditingEntry(null);
-                setFormData({
-                  designation: "",
-                  numeroArticle: "",
-                  unite: "",
-                  quantitePlanifiee: "",
-                  quantiteRealisee: "",
-                  dateRealisation: new Date().toISOString().split('T')[0],
-                  responsable: "",
-                  taskId: "",
-                  invoiceId: "",
-                  facturable: false,
-                  montantFacture: ""
-                });
-              }}>
-                <Plus className="h-4 w-4 mr-1" />
-                Ajouter
-              </Button>
-            </DialogTrigger>
             <DialogContent className="max-w-lg">
               <DialogHeader>
                 <DialogTitle>
