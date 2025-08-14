@@ -233,31 +233,47 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Colonne 1 */}
-          <div className="space-y-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Section Projet */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Section Projet</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
             <ProjectInfoCard project={project} />
+            <TasksCard tasks={[...tasks, ...importedTasksForProject]} projectId={project.id} projectName={project.name} />
+            <JournalDeChantierCard projectId={project.id} tasks={tasks} invoices={invoices} />
+            <AlertsCard alerts={alerts} onMarkAsRead={handleMarkAsRead} />
+          </div>
+        </div>
+
+        {/* Section Finance */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Section Finance</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <InvoicesCard invoices={invoices} />
             <ContractComplementCard contracts={contractComplements} />
+            <ChartsCard project={project} />
           </div>
+        </div>
 
-          {/* Colonne 2 */}
-          <div className="space-y-6">
-            <TasksCard tasks={[...tasks, ...importedTasksForProject]} projectId={project.id} projectName={project.name} />
+        {/* Section Demandes */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Section Demandes</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <MaterialsCard materials={materials} />
             <EmployeesCard employees={employees} />
           </div>
+        </div>
 
-          {/* Colonne 3 */}
-          <div className="space-y-6">
-            <AlertsCard alerts={alerts} onMarkAsRead={handleMarkAsRead} />
-            <JournalDeChantierCard projectId={project.id} tasks={tasks} invoices={invoices} />
-            
-            <ChartsCard project={project} />
+        {/* Section Rapport d'Analyse */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Rapport d'Analyse</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <GanttCard />
+            {/* Additional analytics cards can be added here */}
           </div>
         </div>
+        
       </div>
     </div>
   );
