@@ -233,12 +233,15 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Section Projet */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Section Projet</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+            <span className="w-1 h-6 bg-blue-500 mr-3 rounded"></span>
+            Section Projet
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <ProjectInfoCard project={project} />
             <TasksCard tasks={[...tasks, ...importedTasksForProject]} projectId={project.id} projectName={project.name} />
             <JournalDeChantierCard projectId={project.id} tasks={tasks} invoices={invoices} />
@@ -248,30 +251,43 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
 
         {/* Section Finance */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Section Finance</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+            <span className="w-1 h-6 bg-green-500 mr-3 rounded"></span>
+            Section Finance
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <InvoicesCard invoices={invoices} />
             <ContractComplementCard contracts={contractComplements} />
             <ChartsCard project={project} />
           </div>
         </div>
 
-        {/* Section Demandes */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Section Demandes</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <MaterialsCard materials={materials} />
-            <EmployeesCard employees={employees} />
+        {/* Bottom Row: Demandes & Rapport d'Analyse */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          
+          {/* Section Demandes */}
+          <div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+              <span className="w-1 h-6 bg-orange-500 mr-3 rounded"></span>
+              Section Demandes
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <MaterialsCard materials={materials} />
+              <EmployeesCard employees={employees} />
+            </div>
           </div>
-        </div>
 
-        {/* Section Rapport d'Analyse */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Rapport d'Analyse</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <GanttCard />
-            {/* Additional analytics cards can be added here */}
+          {/* Section Rapport d'Analyse */}
+          <div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+              <span className="w-1 h-6 bg-purple-500 mr-3 rounded"></span>
+              Rapport d'Analyse
+            </h2>
+            <div className="space-y-4">
+              <GanttCard />
+            </div>
           </div>
+          
         </div>
         
       </div>
