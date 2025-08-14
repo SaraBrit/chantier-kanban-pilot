@@ -235,17 +235,25 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto space-y-6">
         
+        {/* Messages d'Alertes - Top of page */}
+        <div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+            <span className="w-1 h-6 bg-red-500 mr-3 rounded"></span>
+            Messages d'Alertes
+          </h2>
+          <AlertsCard alerts={alerts} onMarkAsRead={handleMarkAsRead} />
+        </div>
+        
         {/* Section Projet */}
         <div>
           <h2 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
             <span className="w-1 h-6 bg-blue-500 mr-3 rounded"></span>
             Section Projet
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <ProjectInfoCard project={project} />
             <TasksCard tasks={[...tasks, ...importedTasksForProject]} projectId={project.id} projectName={project.name} />
             <JournalDeChantierCard projectId={project.id} tasks={tasks} invoices={invoices} />
-            <AlertsCard alerts={alerts} onMarkAsRead={handleMarkAsRead} />
           </div>
         </div>
 
