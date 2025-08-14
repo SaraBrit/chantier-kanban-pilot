@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ImportedTasksProvider } from "@/contexts/ImportedTasksContext";
+import { ProgressProvider } from "@/contexts/ProgressContext";
 import Index from "./pages/Index";
 import Documents from "./pages/Documents";
 import ElectronicArchive from "./pages/ElectronicArchive";
@@ -13,21 +14,23 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ImportedTasksProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/documents" element={<Documents />} />
-            <Route path="/archive" element={<ElectronicArchive />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ImportedTasksProvider>
+    <ProgressProvider>
+      <ImportedTasksProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/documents" element={<Documents />} />
+              <Route path="/archive" element={<ElectronicArchive />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ImportedTasksProvider>
+    </ProgressProvider>
   </QueryClientProvider>
 );
 

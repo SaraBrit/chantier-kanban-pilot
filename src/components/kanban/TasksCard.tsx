@@ -1,6 +1,7 @@
 
 import { Task } from "@/types/project";
 import { KanbanCard } from "./KanbanCard";
+import { useProgress } from "@/contexts/ProgressContext";
 import { ProjectExcelImport } from "./ProjectExcelImport";
 import { Kanban, Clock, User, Calendar } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -14,6 +15,8 @@ interface TasksCardProps {
 }
 
 export const TasksCard = ({ tasks, projectId, projectName }: TasksCardProps) => {
+  const { calculateTaskProgress } = useProgress();
+  
   console.log('TasksCard received tasks for project', projectId, ':', tasks);
   const getStatusColor = (status: Task['status']) => {
     switch (status) {
@@ -76,10 +79,10 @@ export const TasksCard = ({ tasks, projectId, projectName }: TasksCardProps) => 
                 <Badge className={getPriorityColor(task.priority)} variant="outline">
                   {getPriorityText(task.priority)}
                 </Badge>
-                <span className="text-xs text-gray-500">{task.progress}%</span>
+                <span className="text-xs text-gray-500">{calculateTaskProgress(task.id, task.progress)}%</span>
               </div>
               
-              <Progress value={task.progress} className="h-1" />
+              <Progress value={calculateTaskProgress(task.id, task.progress)} className="h-1" />
               
               <div className="flex items-center justify-between text-xs text-gray-500">
                 <div className="flex items-center">

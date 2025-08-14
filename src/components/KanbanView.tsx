@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Project, Task, Invoice, MaterialRequest, Alert, ContractComplement } from "@/types/project";
 import { useImportedTasks } from "@/hooks/useImportedTasks";
+import { useProgress } from "@/contexts/ProgressContext";
 import { ProjectInfoCard } from "./kanban/ProjectInfoCard";
 import { TasksCard } from "./kanban/TasksCard";
 import { InvoicesCard } from "./kanban/InvoicesCard";
@@ -19,6 +20,7 @@ interface KanbanViewProps {
 
 export const KanbanView = ({ project }: KanbanViewProps) => {
   const { getTasksForProject } = useImportedTasks();
+  const { calculateProjectProgress, calculateTaskProgress } = useProgress();
   const importedTasksForProject = getTasksForProject(project.id);
   
   // Données mock pour la démonstration
@@ -54,6 +56,16 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
       progress: 0
     }
   ]);
+  
+  const allTasks = [...tasks, ...importedTasksForProject];
+  
+  // Calculate updated project with progress from journal
+  const [updatedProject, setUpdatedProject] = useState(project);
+  
+  useEffect(() => {
+    const newProgress = calculateProjectProgress(allTasks);
+    setUpdatedProject(prev => ({ ...prev, progress: newProgress }));
+  }, [allTasks, calculateProjectProgress]);
 
   const [invoices] = useState<Invoice[]>([
     {
@@ -250,7 +262,7 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
               <span className="w-1 h-6 bg-blue-500 mr-3 rounded"></span>
               Fiche Projet
             </h2>
-            <ProjectInfoCard project={project} />
+            <ProjectInfoCard project={updatedProject} />
           </div>
         </div>
         
@@ -261,8 +273,8 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
             Section Projet
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TasksCard tasks={[...tasks, ...importedTasksForProject]} projectId={project.id} projectName={project.name} />
-            <JournalDeChantierCard projectId={project.id} tasks={tasks} invoices={invoices} />
+            <TasksCard tasks={allTasks} projectId={project.id} projectName={project.name} />
+            <JournalDeChantierCard projectId={project.id} tasks={allTasks} invoices={invoices} />
           </div>
         </div>
 
@@ -275,7 +287,7 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <InvoicesCard invoices={invoices} />
             <ContractComplementCard contracts={contractComplements} />
-            <ChartsCard project={project} />
+            <ChartsCard project={updatedProject} />
           </div>
         </div>
 
@@ -301,7 +313,14 @@ export const KanbanView = ({ project }: KanbanViewProps) => {
               Rapport d'Analyse
             </h2>
             <div className="space-y-4">
-              <GanttCard />
+              <GanttCard tasks={allTasks.map(task => ({
+                id: task.id,
+                name: task.title,
+                startDate: project.startDate,
+                endDate: task.dueDate,
+                progress: calculateTaskProgress(task.id, task.progress),
+                dependencies: []
+              }))} />
             </div>
           </div>
           

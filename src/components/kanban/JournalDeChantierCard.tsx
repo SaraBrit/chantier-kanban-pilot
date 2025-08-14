@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useProgress } from "@/contexts/ProgressContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +21,7 @@ interface JournalDeChantierCardProps {
 }
 
 export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeChantierCardProps) => {
+  const { updateJournalProgress } = useProgress();
   const [journalEntries, setJournalEntries] = useState<JournalDeChantier[]>([
     {
       id: "JDC-001",
@@ -32,7 +34,7 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
       dateCreation: "2024-06-01",
       dateRealisation: "2024-06-15",
       responsable: "Jean Dupont",
-      taskId: tasks[0]?.id,
+      taskId: tasks.find(t => t.title.includes("terrain"))?.id || tasks[0]?.id,
       facturable: true,
       montantFacture: 8000
     },
@@ -47,12 +49,22 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
       dateCreation: "2024-06-10",
       dateRealisation: "2024-06-20",
       responsable: "Marie Martin",
-      taskId: tasks[1]?.id,
+      taskId: tasks.find(t => t.title.includes("fondation"))?.id || tasks[1]?.id,
       invoiceId: invoices[0]?.id,
       facturable: true,
       montantFacture: 4500
     }
   ]);
+
+  // Initialize progress bonuses for existing entries
+  useEffect(() => {
+    journalEntries.forEach(entry => {
+      if (entry.taskId) {
+        const progressBonus = Math.min(10, (entry.quantiteRealisee / entry.quantitePlanifiee) * 10);
+        updateJournalProgress(entry.taskId, progressBonus);
+      }
+    });
+  }, [journalEntries, updateJournalProgress]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalDeChantier | null>(null);
@@ -96,6 +108,12 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
       ));
     } else {
       setJournalEntries(prev => [...prev, newEntry]);
+    }
+
+    // Update progress for linked task
+    if (newEntry.taskId) {
+      const progressBonus = Math.min(10, (newEntry.quantiteRealisee / newEntry.quantitePlanifiee) * 10); // Add up to 10% bonus
+      updateJournalProgress(newEntry.taskId, progressBonus);
     }
 
     setFormData({
