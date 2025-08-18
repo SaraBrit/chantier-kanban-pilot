@@ -66,7 +66,12 @@ export const TasksCard = ({ tasks, projectId, projectName }: TasksCardProps) => 
         {tasks.map((task) => (
           <div key={task.id} className="border rounded-lg p-3 bg-gray-50">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium text-sm text-gray-900 truncate">{task.title}</h4>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  {task.number || `${String(tasks.indexOf(task) + 1).padStart(2, '0')}.00`}
+                </span>
+                <h4 className="font-medium text-sm text-gray-900 truncate">{task.title}</h4>
+              </div>
               <Badge className={getStatusColor(task.status)}>
                 {getStatusText(task.status)}
               </Badge>

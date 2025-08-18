@@ -22,12 +22,35 @@ interface JournalDeChantierCardProps {
 
 export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeChantierCardProps) => {
   const { updateJournalProgress } = useProgress();
+  const getNextJournalNumber = (taskId?: string) => {
+    if (taskId) {
+      // Find the task number
+      const task = tasks.find(t => t.id === taskId);
+      const taskNumber = task?.number || `${String(tasks.indexOf(task!) + 1).padStart(2, '0')}.00`;
+      const baseNumber = taskNumber.split('.')[0];
+      
+      // Find existing entries for this task
+      const taskEntries = journalEntries.filter(entry => entry.taskId === taskId);
+      const nextSubNumber = String(taskEntries.length + 1).padStart(2, '0');
+      
+      return `${baseNumber}.${nextSubNumber}`;
+    } else {
+      // Generate independent number
+      const maxNumber = journalEntries
+        .filter(entry => !entry.taskId)
+        .map(entry => parseInt(entry.numeroArticle.split('-')[0] || '0'))
+        .reduce((max, current) => Math.max(max, current), 0);
+      
+      return `${String(maxNumber + 1).padStart(2, '0')}.00`;
+    }
+  };
+
   const [journalEntries, setJournalEntries] = useState<JournalDeChantier[]>([
     {
       id: "JDC-001",
       projectId,
       designation: "Excavation terrain",
-      numeroArticle: "EXC-001",
+      numeroArticle: "01.01",
       unite: "m³",
       quantitePlanifiee: 100,
       quantiteRealisee: 80,
@@ -42,7 +65,7 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
       id: "JDC-002",
       projectId,
       designation: "Coulage béton fondation",
-      numeroArticle: "BET-002",
+      numeroArticle: "02.01",
       unite: "m³",
       quantitePlanifiee: 50,
       quantiteRealisee: 45,
@@ -85,11 +108,13 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    const autoNumber = editingEntry ? editingEntry.numeroArticle : getNextJournalNumber(formData.taskId && formData.taskId !== "none" ? formData.taskId : undefined);
+    
     const newEntry: JournalDeChantier = {
       id: editingEntry ? editingEntry.id : `JDC-${Date.now()}`,
       projectId,
       designation: formData.designation,
-      numeroArticle: formData.numeroArticle,
+      numeroArticle: autoNumber,
       unite: formData.unite,
       quantitePlanifiee: parseFloat(formData.quantitePlanifiee),
       quantiteRealisee: parseFloat(formData.quantiteRealisee),
@@ -405,7 +430,7 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
             <TableHeader>
               <TableRow>
                 <TableHead>Désignation</TableHead>
-                <TableHead>N° Article</TableHead>
+                <TableHead>Numérotation</TableHead>
                 <TableHead>Unité</TableHead>
                 <TableHead>Qté Planifiée</TableHead>
                 <TableHead>Qté Réalisée</TableHead>
@@ -426,7 +451,11 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
                 return (
                   <TableRow key={entry.id}>
                     <TableCell className="font-medium">{entry.designation}</TableCell>
-                    <TableCell>{entry.numeroArticle}</TableCell>
+                    <TableCell>
+                      <span className="font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                        {entry.numeroArticle}
+                      </span>
+                    </TableCell>
                     <TableCell>{entry.unite}</TableCell>
                     <TableCell>{entry.quantitePlanifiee}</TableCell>
                     <TableCell>{entry.quantiteRealisee}</TableCell>

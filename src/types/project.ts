@@ -25,6 +25,7 @@ export interface Task {
   assignee: string;
   dueDate: string;
   progress: number;
+  number?: string; // Automatic numbering in format 00.00
 }
 
 export interface Invoice {
