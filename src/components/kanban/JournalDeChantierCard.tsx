@@ -93,7 +93,6 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
   const [editingEntry, setEditingEntry] = useState<JournalDeChantier | null>(null);
   const [formData, setFormData] = useState({
     designation: "",
-    numeroArticle: "",
     unite: "",
     quantitePlanifiee: "",
     quantiteRealisee: "",
@@ -143,7 +142,6 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
 
     setFormData({
       designation: "",
-      numeroArticle: "",
       unite: "",
       quantitePlanifiee: "",
       quantiteRealisee: "",
@@ -162,7 +160,6 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
     setEditingEntry(entry);
     setFormData({
       designation: entry.designation,
-      numeroArticle: entry.numeroArticle,
       unite: entry.unite,
       quantitePlanifiee: entry.quantitePlanifiee.toString(),
       quantiteRealisee: entry.quantiteRealisee.toString(),
@@ -256,7 +253,6 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
               setEditingEntry(null);
               setFormData({
                 designation: "",
-                numeroArticle: "",
                 unite: "",
                 quantitePlanifiee: "",
                 quantiteRealisee: "",
@@ -292,18 +288,6 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
                     />
                   </div>
                   <div>
-                    <Label htmlFor="numeroArticle">Numéro d'article</Label>
-                    <Input
-                      id="numeroArticle"
-                      value={formData.numeroArticle}
-                      onChange={(e) => setFormData(prev => ({ ...prev, numeroArticle: e.target.value }))}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
                     <Label htmlFor="unite">Unité</Label>
                     <Input
                       id="unite"
@@ -312,6 +296,9 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
                       required
                     />
                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="quantitePlanifiee">Quantité planifiée</Label>
                     <Input
