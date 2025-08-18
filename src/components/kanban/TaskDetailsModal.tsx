@@ -6,12 +6,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Eye, User, Calendar, AlertCircle } from "lucide-react";
+import { useProgress } from "@/contexts/ProgressContext";
 
 interface TaskDetailsModalProps {
   tasks: Task[];
 }
 
 export const TaskDetailsModal = ({ tasks }: TaskDetailsModalProps) => {
+  const { calculateTaskProgress } = useProgress();
+  
   const getStatusColor = (status: Task['status']) => {
     switch (status) {
       case 'todo': return 'bg-gray-100 text-gray-800';
@@ -102,9 +105,9 @@ export const TaskDetailsModal = ({ tasks }: TaskDetailsModalProps) => {
                   <TableCell>
                     <div className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm">{task.progress}%</span>
+                        <span className="text-sm">{calculateTaskProgress(task.id, task.progress)}%</span>
                       </div>
-                      <Progress value={task.progress} className="h-2 w-20" />
+                      <Progress value={calculateTaskProgress(task.id, task.progress)} className="h-2 w-20" />
                     </div>
                   </TableCell>
                   <TableCell>
