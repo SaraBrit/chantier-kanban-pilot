@@ -81,11 +81,19 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
 
   // Initialize progress bonuses for existing entries
   useEffect(() => {
+    // Reset all progress first
+    const taskProgressMap: { [taskId: string]: number } = {};
+    
     journalEntries.forEach(entry => {
       if (entry.taskId) {
-        const progressBonus = Math.min(10, (entry.quantiteRealisee / entry.quantitePlanifiee) * 10);
-        updateJournalProgress(entry.taskId, progressBonus);
+        const progressBonus = (entry.quantiteRealisee / entry.quantitePlanifiee) * 100;
+        taskProgressMap[entry.taskId] = (taskProgressMap[entry.taskId] || 0) + progressBonus;
       }
+    });
+
+    // Update progress for each task based on total journal progress
+    Object.entries(taskProgressMap).forEach(([taskId, totalProgress]) => {
+      updateJournalProgress(taskId, Math.min(100, totalProgress));
     });
   }, [journalEntries, updateJournalProgress]);
 
@@ -136,8 +144,17 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
 
     // Update progress for linked task
     if (newEntry.taskId) {
-      const progressBonus = Math.min(10, (newEntry.quantiteRealisee / newEntry.quantitePlanifiee) * 10); // Add up to 10% bonus
-      updateJournalProgress(newEntry.taskId, progressBonus);
+      // Calculate total progress from all journal entries for this task
+      const allTaskEntries = journalEntries.filter(entry => entry.taskId === newEntry.taskId);
+      const updatedEntries = editingEntry 
+        ? allTaskEntries.map(entry => entry.id === editingEntry.id ? newEntry : entry)
+        : [...allTaskEntries, newEntry];
+      
+      const totalProgress = updatedEntries.reduce((acc, entry) => {
+        return acc + (entry.quantiteRealisee / entry.quantitePlanifiee) * 100;
+      }, 0);
+      
+      updateJournalProgress(newEntry.taskId, Math.min(100, totalProgress));
     }
 
     setFormData({
@@ -333,6 +350,11 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
                       onChange={(e) => setFormData(prev => ({ ...prev, dateRealisation: e.target.value }))}
                       required
                     />
+                    {formData.taskId && formData.taskId !== "none" && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Date synchronisée avec la tâche liée
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="responsable">Responsable</Label>
@@ -348,7 +370,15 @@ export const JournalDeChantierCard = ({ projectId, tasks, invoices }: JournalDeC
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="taskId">Tâche liée</Label>
-                    <Select value={formData.taskId} onValueChange={(value) => setFormData(prev => ({ ...prev, taskId: value === "none" ? "" : value }))}>
+                    <Select value={formData.taskId} onValueChange={(value) => {
+                      const newTaskId = value === "none" ? "" : value;
+                      const linkedTask = tasks.find(t => t.id === newTaskId);
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        taskId: newTaskId,
+                        dateRealisation: linkedTask?.dueDate || prev.dateRealisation
+                      }));
+                    }}>
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner une tâche" />
                       </SelectTrigger>
